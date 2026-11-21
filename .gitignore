@@ -1,0 +1,50 @@
+# ---- 凭据（绝对不能入库）----
+*.ulf
+*.p12
+*.mobileprovision
+*.p8
+*.pem
+unity_license/
+*.log
+**/Logs/
+hosts.yml
+
+# ---- 大二进制产物 ----
+*.ipa
+*.dylib
+*.deb
+*.a
+*.o
+*.app/
+Payload/
+*.xcarchive/
+
+# ---- Unity / UE 构建缓存 ----
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Saved/
+Intermediate/
+DerivedDataCache/
+UserSettings/
+*.csproj
+*.sln
+*.mk
+*.xcodeproj/
+*.xcworkspace/
+
+# ---- 系统 / 编辑器 ----
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.swp
+*~
+
+# ---- 例外：文档示例允许的占位脚本 ----
+!examples/**/*.c
+!examples/**/*.m

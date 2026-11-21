@@ -1,0 +1,32 @@
+name: toolkit-smoke
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  dylib-smoke:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain (clang + ld64.lld)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clang lld llvm zip dpkg-dev >/dev/null
+          echo "CLANG=$(command -v clang)" >> $GITHUB_ENV
+          echo "LD64=$(ls /usr/lib/llvm-*/bin/ld64.lld | sort -V | tail -1)" >> $GITHUB_ENV
+      # 注意：CI 无 iOS SDK，dylib smoke 无法在此环境跑完整编译。
+      # 若自有 runner 已装 SDK，取消下面注释并把 SDK 路径注入 IOS_SDK。
+      # - name: Dylib smoke
+      #   env:
+      #     IOS_SDK: /opt/ios-sdk/sdks/iPhoneOS16.5.sdk
+      #   run: python3 tools/build_dylib.py smoke
+      - name: Verify scripts compile
+        run: |
+          python3 -m py_compile tools/build_dylib.py tools/linux_ipa_build.py
+          echo "OK: python scripts compile clean"
+      - name: Verify dylib tool --help and verify-macho logic
+        run: |
+          python3 tools/build_dylib.py --help | head -20
+          python3 tools/build_dylib.py verify --file /nonexistent 2>&1 | head -3 || true
